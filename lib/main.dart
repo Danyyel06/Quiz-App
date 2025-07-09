@@ -30,6 +30,34 @@ class QuizApp extends StatefulWidget {
 }
 
 class _QuizAppState extends State<QuizApp> {
+  List<Icon> scoreKeeper = [];
+  List<String> questions = [
+    'The capital of Australia is Sydney.',
+    'Water boils at 100 degrees Celsius at sea level.',
+    'The human body has four lungs.',
+    'Light travels faster than sound.',
+    'Shakespeare wrote the novel "Pride and Prejudice".',
+    'The chemical symbol for gold is Au.',
+    'Bats are mammals.',
+    'Mount Everest is the tallest mountain in the world.',
+    'The Great Wall of China was built in the 20th century.',
+    'Humans and dinosaurs coexisted at the same time.',
+  ];
+
+  List<bool> answers = [
+    false,
+    true,
+    false,
+    true,
+    false,
+    true,
+    true,
+    true,
+    false,
+    false,
+  ];
+
+  int questionNumber = 0;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -40,7 +68,7 @@ class _QuizAppState extends State<QuizApp> {
           flex: 4,
           child: Center(
             child: Text(
-              "This is where the question will go",
+              questions[questionNumber],
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 25.0, color: Colors.white),
             ),
@@ -49,7 +77,7 @@ class _QuizAppState extends State<QuizApp> {
 
         Expanded(
           child: Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(15.0),
             child: TextButton(
               style: TextButton.styleFrom(
                 backgroundColor: Colors.green,
@@ -57,15 +85,28 @@ class _QuizAppState extends State<QuizApp> {
                   borderRadius: BorderRadius.circular(5),
                 ),
               ),
-              onPressed: () {},
-              child: Text("True", style: TextStyle(color: Colors.white)),
+              onPressed: () {
+                bool correctAnswer = answers[questionNumber];
+                if (correctAnswer == true) {
+                  print("User got it right");
+                } else {
+                  print("User got it wrong");
+                }
+                setState(() {
+                  questionNumber++;
+                });
+              },
+              child: Text(
+                "True",
+                style: TextStyle(color: Colors.white, fontSize: 20.0),
+              ),
             ),
           ),
         ),
 
         Expanded(
           child: Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(15.0),
             child: TextButton(
               style: TextButton.styleFrom(
                 backgroundColor: Colors.red,
@@ -73,10 +114,32 @@ class _QuizAppState extends State<QuizApp> {
                   borderRadius: BorderRadius.circular(5),
                 ),
               ),
-              onPressed: () {},
-              child: Text("True", style: TextStyle(color: Colors.white)),
+              onPressed: () {
+                bool correctAnswer = answers[questionNumber];
+                if (correctAnswer == false) {
+                  print("User got it right");
+                } else {
+                  print("User got it wrong");
+                }
+                setState(() {
+                  questionNumber++;
+                });
+              },
+              child: Text(
+                "False",
+                style: TextStyle(color: Colors.white, fontSize: 20.0),
+              ),
             ),
           ),
+        ),
+        Row(
+          children: [
+            Icon(Icons.check, color: Colors.green),
+            Icon(Icons.close, color: Colors.red),
+            Icon(Icons.close, color: Colors.red),
+            Icon(Icons.close, color: Colors.red),
+            Icon(Icons.close, color: Colors.red),
+          ],
         ),
       ],
     );

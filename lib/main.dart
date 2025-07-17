@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:quizzlerapp/quiz_brain.dart';
+
+QuizBrain quizBrain = QuizBrain();
 
 void main() {
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  MyApp({super.key});
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -31,31 +35,6 @@ class QuizApp extends StatefulWidget {
 
 class _QuizAppState extends State<QuizApp> {
   List<Icon> scoreKeeper = [];
-  List<String> questions = [
-    'The capital of Australia is Sydney.',
-    'Water boils at 100 degrees Celsius at sea level.',
-    'The human body has four lungs.',
-    'Light travels faster than sound.',
-    'Shakespeare wrote the novel "Pride and Prejudice".',
-    'The chemical symbol for gold is Au.',
-    'Bats are mammals.',
-    'Mount Everest is the tallest mountain in the world.',
-    'The Great Wall of China was built in the 20th century.',
-    'Humans and dinosaurs coexisted at the same time.',
-  ];
-
-  List<bool> answers = [
-    false,
-    true,
-    false,
-    true,
-    false,
-    true,
-    true,
-    true,
-    false,
-    false,
-  ];
 
   int questionNumber = 0;
   @override
@@ -68,7 +47,7 @@ class _QuizAppState extends State<QuizApp> {
           flex: 4,
           child: Center(
             child: Text(
-              questions[questionNumber],
+              quizBrain.getQuestionString(questionNumber),
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 25.0, color: Colors.white),
             ),
@@ -86,7 +65,10 @@ class _QuizAppState extends State<QuizApp> {
                 ),
               ),
               onPressed: () {
-                bool correctAnswer = answers[questionNumber];
+                //
+                bool correctAnswer = quizBrain.getAnswersQuestion(
+                  questionNumber,
+                );
                 if (correctAnswer == true) {
                   print("User got it right");
                 } else {
@@ -115,7 +97,9 @@ class _QuizAppState extends State<QuizApp> {
                 ),
               ),
               onPressed: () {
-                bool correctAnswer = answers[questionNumber];
+                bool correctAnswer = quizBrain.getAnswersQuestion(
+                  questionNumber,
+                );
                 if (correctAnswer == false) {
                   print("User got it right");
                 } else {

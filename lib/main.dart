@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:quizzlerapp/quiz_brain.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 QuizBrain quizBrain = QuizBrain();
 
@@ -14,7 +15,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        backgroundColor: Colors.grey.shade900,
+        backgroundColor: Colors.white,
         body: SafeArea(
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 10.0),
@@ -36,7 +37,47 @@ class QuizApp extends StatefulWidget {
 class _QuizAppState extends State<QuizApp> {
   List<Icon> scoreKeeper = [];
 
-  int questionNumber = 0;
+  void answerChecker(bool userPickedAnswer) {
+    bool correctAnswer = quizBrain.getAnswersQuestion();
+    if (userPickedAnswer == correctAnswer) {
+      scoreKeeper.add(Icon(Icons.check, color: Colors.green));
+    } else {
+      scoreKeeper.add(Icon(Icons.close, color: Colors.red));
+    }
+    setState(() {
+      quizBrain.nextQuestion();
+      if (quizBrain.isFinished()) {
+        Alert(
+          context: context,
+
+          title: "Finished",
+          style: AlertStyle(
+            titleStyle: TextStyle(
+              color: Colors.black,
+              fontSize: 30,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          desc: "You've reached the end of the quiz.",
+          buttons: [
+            DialogButton(
+              child: Text(
+                "CANCEL",
+                style: TextStyle(color: Colors.white, fontSize: 20),
+              ),
+              onPressed: () => Navigator.pop(context),
+              color: Colors.blueAccent,
+              width: 120,
+            ),
+          ],
+        ).show();
+
+        quizBrain = QuizBrain();
+        scoreKeeper = [];
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -47,9 +88,9 @@ class _QuizAppState extends State<QuizApp> {
           flex: 4,
           child: Center(
             child: Text(
-              quizBrain.getQuestionString(questionNumber),
+              quizBrain.getQuestionString(),
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 25.0, color: Colors.white),
+              style: TextStyle(fontSize: 25.0, color: Colors.black),
             ),
           ),
         ),
@@ -65,18 +106,7 @@ class _QuizAppState extends State<QuizApp> {
                 ),
               ),
               onPressed: () {
-                //
-                bool correctAnswer = quizBrain.getAnswersQuestion(
-                  questionNumber,
-                );
-                if (correctAnswer == true) {
-                  print("User got it right");
-                } else {
-                  print("User got it wrong");
-                }
-                setState(() {
-                  questionNumber++;
-                });
+                answerChecker(true);
               },
               child: Text(
                 "True",
@@ -97,17 +127,7 @@ class _QuizAppState extends State<QuizApp> {
                 ),
               ),
               onPressed: () {
-                bool correctAnswer = quizBrain.getAnswersQuestion(
-                  questionNumber,
-                );
-                if (correctAnswer == false) {
-                  print("User got it right");
-                } else {
-                  print("User got it wrong");
-                }
-                setState(() {
-                  questionNumber++;
-                });
+                answerChecker(false);
               },
               child: Text(
                 "False",
@@ -116,15 +136,7 @@ class _QuizAppState extends State<QuizApp> {
             ),
           ),
         ),
-        Row(
-          children: [
-            Icon(Icons.check, color: Colors.green),
-            Icon(Icons.close, color: Colors.red),
-            Icon(Icons.close, color: Colors.red),
-            Icon(Icons.close, color: Colors.red),
-            Icon(Icons.close, color: Colors.red),
-          ],
-        ),
+        Row(children: scoreKeeper),
       ],
     );
   }
